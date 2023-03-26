@@ -19,22 +19,22 @@ nTickets <- function(N,gamma,p){
   nd <- c(N:(N*(1+(1-p))))[ind]
 
   # Continuous n calculation (normal approximation)
-  nc <- qnorm(1-p, (N*0.1+N)*p, sqrt((N*0.1+N)*p*(1-p)))
+  nc <- qnorm(1-p+(1-p), (N*((1-p)*2)+N)*p, sqrt((N*((1-p)*2)+N)*p*(1-p))+((1-p)*2))
 
   # Random function to enable optimize
   f <- function(x){x}
 
   # Discrete function plot
-  x <- seq(N,N*0.1+N,by = 1)
+  x <- seq(N,N*((1-p)*2)+N,by = 1)
   y <- 1-pbinom(N,x,p)
-  plot(x, y, xlim = c(N, N*0.1+N), lwd = 1, xlab = "n", ylab = "Objective", pch = 23, bg = "blue", type = "b")
+  plot(x, y, xlim = c(N, N*((1-p)*2)+N), lwd = 1, xlab = "n", ylab = "Objective", pch = 23, bg = "blue", type = "b")
   op <- optimize(f, interval = c(0,1))
   op
   abline(v = nd , h = 0, col = "red")
   title(main = paste0("Objective Vs n to find optimal tickets sold\n(",nd,") gamma= ", gamma," N=",N," discrete"))
 
   # Continuous function plot
-  curve(1-gamma-pnorm(N+0.5, x*p, sqrt(x*p*(1-p))), xlim = c(N, N*0.1+N), lwd = 1, xlab = "n", ylab = "Objective")
+  curve(1-gamma-pnorm(N+0.5, x*p, sqrt(x*p*(1-p))), xlim = c(N, N*((1-p)*2)+N), lwd = 1, xlab = "n", ylab = "Objective")
   op <- optimize(f, interval = c(0,1))
   op
   abline(v = nc , h = 0, col = "blue")
